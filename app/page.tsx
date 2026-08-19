@@ -53,14 +53,27 @@ export default function Home() {
 
   function handleFile(file?: File) {
     if (!file) return;
+  
     if (!file.type.startsWith("image/")) {
       setError("Please choose an image.");
       return;
     }
+  
     setError("");
-    const url = URL.createObjectURL(file);
-    setImageUrl(url);
-    makeSketch(url, style, detail);
+  
+    const reader = new FileReader();
+  
+    reader.onload = () => {
+      const url = reader.result as string;
+      setImageUrl(url);
+      makeSketch(url, style, detail);
+    };
+  
+    reader.onerror = () => {
+      setError("Couldn't read that image. Please try another photo.");
+    };
+  
+    reader.readAsDataURL(file);
   }
 
   function makeSketch(url: string, selectedStyle: Style = style, selectedDetail = detail) {
