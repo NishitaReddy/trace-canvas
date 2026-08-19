@@ -76,10 +76,13 @@ input[type="range"] { width: 100%; height: 6px; accent-color: var(--accent-light
   .editor { grid-template-columns: 1fr; gap: 16px; }
   .preview { min-height: 43vh; max-height: 55vh; border-radius: 22px; }
   .controls { padding: 22px; border-radius: 22px; }
-  .trace { height: calc(100vh - 66px); min-height: calc(100svh - 66px); }
-  .traceControls { bottom: 14px; gap: 4px; padding: 8px; border-radius: 18px; }
+  .trace { height: calc(100dvh - 66px); min-height: 0; }
+  .traceControls { position: fixed; bottom: max(14px, env(safe-area-inset-bottom)); gap: 5px; padding: 8px; border-radius: 18px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; }
   .tool { min-width: 43px; padding-inline: 5px; }
-  .opacity { min-width: 76px; gap: 4px; }
-  .zoom label { width: 72px; }
+  .opacity { min-width: 0; gap: 4px; }
+  .opacity input { min-width: 0; }
+  .zoom { min-width: 0; gap: 1px; }
+  .zoom label { width: clamp(52px, 18vw, 72px); }
+  .zoom .tool { min-width: 38px; }
   .traceHint { top: 12px; font-size: 11px; }
 }
