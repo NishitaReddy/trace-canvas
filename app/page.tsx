@@ -162,6 +162,16 @@ export default function Home() {
     dragRef.current.active = false;
   }
 
+  function changeZoom(next: number) {
+    setZoom(Math.max(0.25, Math.min(3, next)));
+  }
+
+  function handleGuideWheel(e: React.WheelEvent<HTMLDivElement>) {
+    if (locked) return;
+    e.preventDefault();
+    changeZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+  }
+
   return (
     <main className="app">
       <header className="topbar">
@@ -238,6 +248,7 @@ export default function Home() {
               onPointerDown={pointerDown}
               onPointerMove={pointerMove}
               onPointerUp={pointerUp}
+              onWheel={handleGuideWheel}
             >
               <img src={sketchUrl} alt="Trace guide" draggable={false} />
             </div>
@@ -254,8 +265,14 @@ export default function Home() {
               <input type="range" min="0.08" max="1" step="0.01" value={opacity} onChange={(e) => setOpacity(Number(e.target.value))} />
               <span>●</span>
             </div>
-            <button className="tool" onClick={() => setZoom((v) => Math.min(2.5, v + 0.1))}>＋<small>Zoom</small></button>
-            <button className="tool" onClick={() => setZoom((v) => Math.max(0.5, v - 0.1))}>−<small>Out</small></button>
+            <div className="zoom" aria-label="Guide zoom">
+              <button className="tool" onClick={() => changeZoom(zoom - 0.1)} aria-label="Zoom out">−<small>Out</small></button>
+              <label>
+                <span>Zoom {Math.round(zoom * 100)}%</span>
+                <input type="range" min="0.25" max="3" step="0.05" value={zoom} onChange={(e) => changeZoom(Number(e.target.value))} />
+              </label>
+              <button className="tool" onClick={() => changeZoom(zoom + 0.1)} aria-label="Zoom in">＋<small>In</small></button>
+            </div>
           </div>
 
           {error && <div className="error">{error}</div>}
